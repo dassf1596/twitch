@@ -1,22 +1,262 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Page Title</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Twitch ↔ Discord | คู่มือการเชื่อมต่อ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="คู่มือการเชื่อมต่อ Twitch กับ Discord เพื่อแจกยศ Subscriber อัตโนมัติ" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1221;
+      --card:#14172b;
+      --accent:#5865F2; /* Discord blurple */
+      --twitch:#9146FF;
+      --text:#e6e8ff;
+      --muted:#9aa0b4;
+      --ring: 0 0 0 .25rem rgba(88,101,242,.35);
+    }
+    html,body{background:linear-gradient(180deg,#0d1020 0%, #0f1221 40%, #0b0e1a 100%); color:var(--text); font-family:"Kanit",system-ui,Segoe UI,Arial; }
+    .navbar{ background: rgba(20,23,43,.7); backdrop-filter: blur(8px); }
+    .brand-badge{
+      display:inline-flex; align-items:center; gap:.5rem;
+      background: linear-gradient(90deg, var(--twitch), var(--accent));
+      padding:.35rem .75rem; border-radius:999px; font-weight:700; letter-spacing:.3px;
+      box-shadow:0 10px 30px rgba(145,70,255,.25);
+    }
+    .btn-discord{
+      background:var(--accent); color:#fff; border:none; font-weight:700;
+      padding:.75rem 1.1rem; border-radius:.9rem;
+      box-shadow:0 10px 24px rgba(88,101,242,.35);
+    }
+    .btn-discord:hover{ filter:brightness(1.08); box-shadow:0 0 0 0 rgba(0,0,0,0), 0 10px 24px rgba(88,101,242,.55); }
+    .btn-discord:focus{ box-shadow: var(--ring);}
+    .hero{
+      position:relative; overflow:hidden;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .hero::after{
+      content:""; position:absolute; inset:auto -20% -40% -20%;
+      height:60%; background: radial-gradient(60% 60% at 50% 0%, rgba(145,70,255,.25), rgba(88,101,242,.08) 50%, transparent 70%);
+      filter: blur(30px);
+    }
+    .hero h1{ font-weight:800; letter-spacing:.4px; }
+    .hero p{ color:var(--muted); }
+
+    .cardx{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:1.25rem; padding:1.25rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .cardx h5{ font-weight:700; }
+    .step-badge{
+      width:36px; height:36px; display:inline-grid; place-items:center;
+      background:linear-gradient(180deg, #222742, #1a1e35);
+      border:1px solid rgba(255,255,255,.1); border-radius:.85rem;
+      color:#cfd3ff; font-weight:700; font-size:.95rem;
+      box-shadow:0 6px 16px rgba(0,0,0,.35);
+    }
+    .check{ color:#9AF5A6; }
+    .muted{ color:var(--muted); }
+
+    .img-grid img{
+      width:100%; height:auto; border-radius:1rem;
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow:0 10px 24px rgba(0,0,0,.35);
+    }
+    .footer{
+      color:var(--muted);
+      border-top:1px solid rgba(255,255,255,.06);
+    }
+    a.link{ color:#cfd3ff; text-decoration:underline dotted }
+    a.link:hover{ color:#fff; }
+    .kbd{
+      background:#0e1122; border:1px solid rgba(255,255,255,.15); padding:.15rem .45rem; border-radius:.45rem; font-weight:700;
+    }
+  </style>
 </head>
 <body>
-    <div class="container-md text-center">
 
-        <img src="1.png" height="1000px">
-        <img src="2.png" height="1000px">
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-dark sticky-top">
+    <div class="container py-2">
+      <div class="d-flex align-items-center gap-3">
+        <span class="brand-badge">Twitch ↔ Discord</span>
+        <span class="muted d-none d-md-inline">คู่มือแจกยศ Subscriber อัตโนมัติ</span>
+      </div>
+      <!-- ปุ่มลิงก์เข้าดิสอยู่ด้านบน -->
+      <a class="btn btn-discord" href="https://discord.gg/YuJUatsk" target="_blank" rel="noopener">
+        เข้าดิสคอร์ดของเรา
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero py-5">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <h1 class="display-5 mb-3">เชื่อม <span style="color:#9146FF">Twitch</span> กับ <span style="color:#5865F2">Discord</span> ง่าย ๆ</h1>
+          <p class="lead mb-4">แจกยศ Subscriber ให้แฟนคลับแบบอัตโนมัติ โดยใช้ <strong>Discord → Integrations → Twitch</strong> พร้อมภาพตัวอย่างและขั้นตอนทีละสเต็ป</p>
+          <div class="d-flex gap-2 flex-wrap">
+            <a class="btn btn-discord" href="#guide">ดูคู่มือด้านล่าง</a>
+            <a class="btn btn-outline-light" style="border-radius:.9rem" href="#shots">ดูภาพตัวอย่าง</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="cardx">
+            <h5 class="mb-3">ลิงก์สำคัญ</h5>
+            <ul class="list-unstyled m-0">
+              <li class="mb-2">🟣 <a class="link" href="https://www.twitch.tv" target="_blank" rel="noopener">Twitch</a></li>
+              <li class="mb-2">🔵 <a class="link" href="https://discord.com" target="_blank" rel="noopener">Discord</a></li>
+              <li class="mb-2">🤖 <a class="link" href="https://nightbot.tv" target="_blank" rel="noopener">Nightbot</a></li>
+              <li>📦 <a class="link" href="https://squoosh.app" target="_blank" rel="noopener">Squoosh (บีบอัด PNG/Badge)</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SCREENSHOTS -->
+  <section id="shots" class="py-5">
+    <div class="container">
+      <h2 class="fw-bold mb-4">ภาพตัวอย่างหน้าจอ</h2>
+      <p class="muted mb-4">อัปโหลดภาพของคุณเองได้ โดยตั้งชื่อไฟล์เป็น <code>1.png</code> และ <code>2.png</code> ไว้โฟลเดอร์เดียวกับไฟล์นี้</p>
+      <div class="row g-4 img-grid">
+        <div class="col-md-6">
+          <img src="1.png" alt="ตัวอย่างหน้าจอ 1">
+        </div>
+        <div class="col-md-6">
+          <img src="2.png" alt="ตัวอย่างหน้าจอ 2">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUIDE -->
+  <section id="guide" class="py-5">
+    <div class="container">
+      <h2 class="fw-bold mb-4">คู่มือการเชื่อม Twitch เข้ากับ Discord</h2>
+
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <div class="cardx h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <span class="step-badge">1</span>
+              <h5 class="m-0">เตรียมความพร้อม</h5>
+            </div>
+            <ul class="m-0">
+              <li class="mb-2">บัญชี Twitch ต้องเป็น <strong>Affiliate หรือ Partner</strong> (มีปุ่ม Subscribe)</li>
+              <li class="mb-2">คุณต้องเป็น <strong>เจ้าของ/แอดมิน</strong> ของเซิร์ฟเวอร์ Discord</li>
+              <li>มีแผนแจกยศ/สิทธิ์สำหรับ Subscriber เช่น ห้องลับ/อีโมพิเศษ</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="cardx h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <span class="step-badge">2</span>
+              <h5 class="m-0">เชื่อมบัญชี (User Settings)</h5>
+            </div>
+            <ol class="m-0">
+              <li class="mb-2">Discord → <strong>การตั้งค่าผู้ใช้</strong> (รูปเฟือง)</li>
+              <li class="mb-2"><strong>การเชื่อมต่อ</strong> → เลือกไอคอน <strong>Twitch</strong> → ล็อกอิน/อนุญาต</li>
+              <li>เมื่อสำเร็จจะเห็นบัญชี Twitch แสดงในหน้า Connections</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="cardx h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <span class="step-badge">3</span>
+              <h5 class="m-0">ผสานรวมบนเซิร์ฟเวอร์</h5>
+            </div>
+            <ol class="m-0">
+              <li class="mb-2">เข้าเซิร์ฟเวอร์ของคุณ → <strong>การตั้งค่าเซิร์ฟเวอร์</strong></li>
+              <li class="mb-2"><strong>การผสานรวม (Integrations)</strong> → เลือก <strong>Twitch</strong></li>
+              <li class="mb-2">เชื่อมช่องให้ถูกต้อง แล้วกด <strong>Sync</strong></li>
+              <li>ระบบจะสร้างยศอัตโนมัติ เช่น <em>Twitch Subscriber / Tier 1 / Tier 2 / Tier 3</em></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="cardx h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <span class="step-badge">4</span>
+              <h5 class="m-0">กำหนดสิทธิ์ & ห้องลับ</h5>
+            </div>
+            <ul class="m-0">
+              <li class="mb-2">ไปที่ <strong>Roles</strong> → ปรับชื่อ สี และ Permission ของยศ Subscriber</li>
+              <li class="mb-2">สร้าง <strong>ช่องแชท/เสียง สำหรับสมาชิกเท่านั้น</strong></li>
+              <li>ตั้งค่า “Expired Sub Behavior” ว่าหมดอายุแล้วจะเอายศออกเมื่อไร</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="cardx h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <span class="step-badge">5</span>
+              <h5 class="m-0">ให้ผู้ชมเชื่อมบัญชีของเขา</h5>
+            </div>
+            <ol class="m-0">
+              <li class="mb-2">ผู้ชมเปิด Discord → <strong>การตั้งค่าผู้ใช้</strong> → <strong>การเชื่อมต่อ</strong></li>
+              <li class="mb-2">เชื่อมกับบัญชี Twitch ของตนเอง</li>
+              <li>เข้าร่วมเซิร์ฟเวอร์ของคุณ → ระบบมอบยศตาม Tier อัตโนมัติ</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="cardx h-100">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <span class="step-badge">6</span>
+              <h5 class="m-0">บอทแชทเสริม (Nightbot)</h5>
+            </div>
+            <ul class="m-0">
+              <li class="mb-2"><a class="link" href="https://nightbot.tv" target="_blank" rel="noopener">nightbot.tv</a> → Join Channel → พิมพ์ <span class="kbd">/mod nightbot</span> ในแชท</li>
+              <li class="mb-2">เพิ่มคำสั่งเช่น <span class="kbd">!discord</span>, <span class="kbd">!manual</span> เพื่อลิงก์คู่มือ</li>
+              <li>ตัวอย่างข้อความ: <em>📘 คู่มือการเชื่อม Twitch ↔ Discord: https://your-link</em></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="cardx mt-4">
+        <h5 class="mb-3">คำถามพบบ่อย (FAQ)</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <strong>Q:</strong> ต้องเป็น Affiliate ไหมถึงจะแจกยศ Sub ได้? <br>
+            <strong class="check">A:</strong> ใช่ ต้องเป็น Affiliate/Partner เพื่อเปิดระบบ Subscribe ก่อน
+          </div>
+          <div class="col-md-6">
+            <strong>Q:</strong> หมด Sub แล้ว ยศจะถูกถอดเองไหม? <br>
+            <strong class="check">A:</strong> ได้ ตั้งค่าได้ใน Integrations → Expired behavior
+          </div>
+        </div>
+      </div>
 
     </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </section>
 
+  <!-- FOOTER -->
+  <footer class="footer py-4">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <span>© 2025 TwitchCatBadge — คู่มือ Creator ไทย</span>
+      <a class="btn btn-sm btn-discord" href="https://discord.gg/YuJUatsk" target="_blank" rel="noopener">เข้าดิสคอร์ดของเรา</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
